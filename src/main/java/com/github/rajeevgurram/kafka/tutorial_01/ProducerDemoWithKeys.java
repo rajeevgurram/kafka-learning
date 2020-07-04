@@ -8,19 +8,20 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
-public class ProducerDemo {
+public class ProducerDemoWithKeys {
     final KafkaProducer<String, String> producer;
 
     @Autowired
-    public ProducerDemo(final KafkaProducer<String, String> producer) {
+    public ProducerDemoWithKeys(final KafkaProducer<String, String> producer) {
         this.producer = producer;
     }
 
-    //@PostConstruct
+    @PostConstruct
     public void sendData() {
         for(int i = 0; i < 1000000; i ++) {
+            // Same key records goes to same partition
             ProducerRecord<String, String> record =
-                    new ProducerRecord<>("first_topic", "from java " + i);
+                    new ProducerRecord<>("first_topic", "my_key", "from java " + i);
             producer.send(record);
         }
         producer.flush();

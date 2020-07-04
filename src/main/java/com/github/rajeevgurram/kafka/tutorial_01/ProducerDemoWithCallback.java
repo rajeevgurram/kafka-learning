@@ -3,16 +3,14 @@ package com.github.rajeevgurram.kafka.tutorial_01;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-@Component
-public class ProducerDemo {
+public class ProducerDemoWithCallback {
     final KafkaProducer<String, String> producer;
 
     @Autowired
-    public ProducerDemo(final KafkaProducer<String, String> producer) {
+    public ProducerDemoWithCallback(final KafkaProducer<String, String> producer) {
         this.producer = producer;
     }
 
@@ -21,7 +19,9 @@ public class ProducerDemo {
         for(int i = 0; i < 1000000; i ++) {
             ProducerRecord<String, String> record =
                     new ProducerRecord<>("first_topic", "from java " + i);
-            producer.send(record);
+            producer.send(record, (recordMetadata, e) -> {
+                System.out.println(recordMetadata.topic());
+            });
         }
         producer.flush();
     }
