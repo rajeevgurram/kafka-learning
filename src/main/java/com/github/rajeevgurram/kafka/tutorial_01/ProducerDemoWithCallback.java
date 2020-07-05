@@ -14,7 +14,7 @@ public class ProducerDemoWithCallback {
         this.producer = producer;
     }
 
-    //@PostConstruct
+    @PostConstruct
     public void sendData() {
         for(int i = 0; i < 1000000; i ++) {
             ProducerRecord<String, String> record =

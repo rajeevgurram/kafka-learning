@@ -1,4 +1,4 @@
-package com.github.rajeevgurram.kafka.config;
+package com.github.rajeevgurram.kafka.app.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -52,6 +52,29 @@ public class KafkaConfig {
 
         // Step3: Subscribe to topics
         consumer.subscribe(Collections.singleton(topic));
+
+        // Step4: Poll
+
+        return consumer;
+    }
+
+    @Bean("twitter")
+    // 4 Steps to create kafka consumer
+    public KafkaConsumer<String, String> getTwitterKafkaConsumer() {
+        // Step1: Create consumer properties.
+        Properties properties = new Properties();
+
+        properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
+        properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "kafka-learning");
+
+        // Step2: Create consumer
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+
+        // Step3: Subscribe to topics
+        consumer.subscribe(Collections.singleton("twitter-tweets"));
 
         // Step4: Poll
 
